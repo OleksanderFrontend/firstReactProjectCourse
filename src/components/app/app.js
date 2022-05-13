@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component, useLayoutEffect } from 'react';
 
 import AppInfo from '../app-info/app-info';
 import SearchPanel from '../search-panel/search-panel';
@@ -68,50 +68,53 @@ class App extends Component {
     ))
   }
 
-  searchEmp = (items, term) => {
-    if (term.length === 0) {
-      return items
-    }
-
-    return items.filter(item => item.name.indexOf(term) > -1)
-  }
 
   onUpdateSearch = (term) => {
     this.setState({ term })
   }
 
-  onFilters = (elem) => {
-
+  onFilters = (items, elem) => {
     switch (elem) {
       case 'increase':
-        return this.state.data.filter(item => item.increase);
-      
-        case 'all':
-        return this.state.data
-        
-       case 'salary':
-        return this.state.data.filter(item => item.salary > 1000);
-    
-        default:
-          return this.state.data
+        return items.filter(item => item.increase);
+
+      case 'all':
+        return items
+
+      case 'salary':
+        return items.filter(item => item.salary > 1000);
+
+      default:
+        return items
     }
     
-  
-    
+    // if (elem === 'increase') {
+    //   return items.filter(item => item.increase);
+    // } else if (elem === 'all') {
+    //   return items
+    // } else if (elem === 'salary') {
+    //   return items.filter(item => item.salary > 1000);
+    // } else if (term.length > 0) {
+    //   return items.filter(item => item.name.indexOf(term) > -1)
+    // } else {
+    //   return items
+    // }
+
+
   }
   onUpdateClick = (click) => {
-    this.setState({click})
+    this.setState({ click })
   }
 
 
   render() {
-    const { data, term, click} = this.state;
+    const { data, term, click } = this.state;
     const total = this.state.data.length;
     const increased = this.state.data.filter(item => item.increase).length;
 
-    // const visibleData = this.searchEmp(data, term)
-    // const visibleData = this.onIncrease()
-    // console.log(visibleData);
+    const visibleData = this.onFilters(data, click);
+    console.log(visibleData);
+
 
     return (
       <div className="app">
@@ -122,11 +125,11 @@ class App extends Component {
           <SearchPanel onUpdateSearch={this.onUpdateSearch} />
           <AppFilter
             onFilter={this.onFilters}
-            onUpdateClick={this.onUpdateClick}/>
+            onUpdateClick={this.onUpdateClick} />
         </div>
 
         <EmployersList
-          data={this.onFilters(click)}
+          data={visibleData}
           onDelete={this.deleteItem}
           onToggleProp={this.onToggleProp}
         />
