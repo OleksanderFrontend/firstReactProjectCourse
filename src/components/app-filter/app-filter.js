@@ -7,13 +7,13 @@ class AppFilter extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      click: ''
+      filter: ''
     }
   }
   btnOnClick = (e) => {
     const btnClick = e.target.getAttribute('data-filter')
-    this.setState({click: btnClick})
-    this.props.onUpdateClick(btnClick)
+    this.setState({filter: btnClick})
+    this.props.onUpdateFilter(btnClick)
 
   }
 
